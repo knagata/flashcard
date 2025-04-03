@@ -3,86 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <title>中国語 単語フラッシュカード</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      text-align: center;
-      background-color: #f0f0f0;
-      margin-top: 50px;
-    }
-    /* カードコンテナ */
-    #card-container {
-      position: relative;
-      width: 300px;
-      height: 250px;
-      margin: 0 auto;
-      border: 1px solid #ccc;
-      background-color: #fff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      user-select: none;
-    }
-    #card-container.hidden { display: none; }
-    /* 単語表示 */
-    #card-word {
-      font-size: 2em;
-    }
-    /* 単語番号表示（右下） */
-    #word-number {
-      position: absolute;
-      bottom: 5px;
-      right: 5px;
-      font-size: 0.8em;
-      color: #888;
-    }
-    /* オーバーレイ：詳細情報＆回答ボタン */
-    #overlay {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(255,255,255,0.95);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      padding: 10px;
-    }
-    #overlay.hidden { display: none; }
-    .pinyin-row {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 1.5em;
-    }
-    .example-row {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 1em;
-      text-align: left;
-      width: 90%;
-      line-height: 1.4;
-    }
-    .buttons-row {
-      display: flex;
-      gap: 20px;
-      margin-top: 10px;
-    }
-    button {
-      font-size: 1.2em;
-      padding: 10px 20px;
-      cursor: pointer;
-    }
-    #reset-container {
-      margin-top: 20px;
-    }
-    #reset-container.hidden { display: none; }
-  </style>
+  <!-- 外部CSSの読み込み -->
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div id="card-container">
@@ -93,7 +15,7 @@
         <span id="pinyin"></span>
         <button id="replayBtn" title="単語再生">🔈️</button>
       </div>
-      <div id="meaning" style="font-size:1.2em;"></div>
+      <div id="meaning"></div>
       <div class="example-row">
         <button id="phraseReplayBtn" title="例文再生">🔈️</button>
         <div id="example"></div>
@@ -107,188 +29,11 @@
   </div>
 
   <div id="reset-container" class="hidden">
-    <div style="font-size:1.5em; margin-bottom:10px;">今日の学習は終了しました</div>
+    <div class="reset-message">今日の学習は終了しました</div>
     <button id="resetBtn">リセット</button>
   </div>
 
-  <script>
-    let allWords = [];
-    let activeWords = [];
-    let currentIndex = 0;
-    let resultsData = {}; // キーは number 配列をハイフン結合した文字列
-  
-    // 複合キーを文字列に変換する関数
-    function keyForWord(word) {
-      if (!Array.isArray(word.number)) {
-        console.error("デバッグ: word.number が配列ではありません。word の内容:", word);
-        throw new Error("word.number is not an array. Please check words.json data format.");
-      }
-      return word.number.join('-');
-    }
-  
-    // words.json と /results を読み込む
-    Promise.all([
-      fetch('words.json').then(r => r.json()),
-      fetch('/results').then(r => r.json())
-    ]).then(([wordsData, resData]) => {
-      allWords = wordsData;
-      // resData は配列なので、キー付きオブジェクトに変換する
-      resData.forEach(record => {
-        const key = record.number.join('-');
-        resultsData[key] = record;
-      });
-      const now = Date.now();
-      activeWords = allWords.filter(word => {
-        const rec = resultsData[keyForWord(word)];
-        if (rec && rec.last_super_correct) {
-          const last = new Date(rec.last_super_correct).getTime();
-          if (now - last < 24 * 3600 * 1000) return false;
-        }
-        return true;
-      });
-      chooseNextWord();
-      displayWord();
-    });
-  
-    // 重み付きランダム選出：各単語の重み = (100 - accuracy) + 1 (未記録なら accuracy = 0)
-    function chooseWeightedIndex() {
-      let totalWeight = 0;
-      let weights = [];
-      activeWords.forEach(word => {
-        const rec = resultsData[keyForWord(word)];
-        let accuracy = 0;
-        if (rec && rec.history && rec.history.length > 0) {
-          const total = rec.history.length;
-          const sum = rec.history.reduce((a, b) => a + b, 0);
-          accuracy = Math.round((sum / total) * 100);
-        }
-        const weight = (100 - accuracy) + 1;
-        weights.push(weight);
-        totalWeight += weight;
-      });
-      let rnd = Math.random() * totalWeight;
-      let cumulative = 0;
-      for (let i = 0; i < activeWords.length; i++) {
-        cumulative += weights[i];
-        if (rnd < cumulative) return i;
-      }
-      return activeWords.length - 1;
-    }
-  
-    function chooseNextWord() {
-      if (activeWords.length < 1) return;
-      currentIndex = chooseWeightedIndex();
-    }
-  
-    function displayWord() {
-      if (activeWords.length < 1) {
-        document.getElementById('card-container').classList.add('hidden');
-        document.getElementById('reset-container').classList.remove('hidden');
-        return;
-      }
-      const currentWord = activeWords[currentIndex];
-      document.getElementById('card-word').textContent = currentWord.word;
-      document.getElementById('word-number').textContent = `#${keyForWord(currentWord)}`;
-      document.getElementById('overlay').classList.add('hidden');
-    }
-  
-    function speakText(text) {
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = 'zh-TW';
-      speechSynthesis.speak(utterance);
-    }
-  
-    function playAudioWithFallback(url, fallbackFn) {
-      const audio = new Audio(url);
-      audio.onerror = fallbackFn;
-      audio.oncanplaythrough = () => audio.play();
-      audio.load();
-    }
-  
-    document.getElementById('card-container').addEventListener('click', function(e) {
-      const overlay = document.getElementById('overlay');
-      if (overlay.classList.contains('hidden')) {
-        const currentWord = activeWords[currentIndex];
-        document.getElementById('pinyin').textContent = currentWord.pinyin;
-        document.getElementById('meaning').textContent = currentWord.meaning;
-        const ex = currentWord.example;
-        document.getElementById('example').innerHTML = `<strong>例文:</strong> ${ex.text}<br>
-  <strong>拼音:</strong> ${ex.pinyin}<br>
-  <strong>訳:</strong> ${ex.translation}`;
-        overlay.classList.remove('hidden');
-        const wordAudioUrl = `mp3/${keyForWord(currentWord)}_word.mp3`;
-        playAudioWithFallback(wordAudioUrl, () => speakText(currentWord.word));
-      }
-    });
-  
-    document.getElementById('replayBtn').addEventListener('click', function(e) {
-      e.stopPropagation();
-      const currentWord = activeWords[currentIndex];
-      const wordAudioUrl = `mp3/${keyForWord(currentWord)}_word.mp3`;
-      playAudioWithFallback(wordAudioUrl, () => speakText(currentWord.word));
-    });
-  
-    document.getElementById('phraseReplayBtn').addEventListener('click', function(e) {
-      e.stopPropagation();
-      const currentWord = activeWords[currentIndex];
-      const phraseAudioUrl = `mp3/${keyForWord(currentWord)}_phrase.mp3`;
-      playAudioWithFallback(phraseAudioUrl, () => speakText(currentWord.example.text));
-    });
-  
-    // 仮の回答送信処理。POST時に composite key (number) を送る
-    function recordAnswer(result) {
-      const currentWord = activeWords[currentIndex];
-      fetch('/results', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ number: currentWord.number, result: result })
-      }).then(response => response.json())
-        .then(data => {
-          console.log(`Word: ${keyForWord(currentWord)}, Result: ${result}, Accuracy: ${data.accuracy}`);
-        });
-    }
-  
-    document.getElementById('superCorrectBtn').addEventListener('click', function(e) {
-      e.stopPropagation();
-      recordAnswer("superCorrect");
-      activeWords.splice(currentIndex, 1);
-      if (activeWords.length < 1) {
-        displayWord();
-      } else {
-        chooseNextWord();
-        displayWord();
-      }
-    });
-  
-    document.getElementById('correctBtn').addEventListener('click', function(e) {
-      e.stopPropagation();
-      recordAnswer("correct");
-      chooseNextWord();
-      displayWord();
-    });
-  
-    document.getElementById('incorrectBtn').addEventListener('click', function(e) {
-      e.stopPropagation();
-      recordAnswer("incorrect");
-      chooseNextWord();
-      displayWord();
-    });
-  
-    document.getElementById('resetBtn').addEventListener('click', function(e) {
-      fetch('/resetResults', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' }
-      }).then(response => response.json())
-        .then(data => {
-          if (data.success) {
-            activeWords = allWords.slice();
-            chooseNextWord();
-            document.getElementById('reset-container').classList.add('hidden');
-            document.getElementById('card-container').classList.remove('hidden');
-            displayWord();
-          }
-        });
-    });
-  </script>
+  <!-- 外部JavaScriptの読み込み -->
+  <script src="script.js"></script>
 </body>
 </html>
