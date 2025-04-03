@@ -179,7 +179,7 @@ button {
         padding: 4vw;
     }
 
-    #card-word {
+    /* #card-word {
         font-size: 12vw;
     }
 
@@ -201,7 +201,7 @@ button {
 
     .buttons-row {
         font-size: 6vw;
-    }
+    } */
 
     button {
         font-size: 6vw;
@@ -215,8 +215,8 @@ button {
         height: 16vw;
     }
 
-    .reset-message,
+    /* .reset-message,
     .continue-message {
         font-size: 8vw;
-    }
+    } */
 }
