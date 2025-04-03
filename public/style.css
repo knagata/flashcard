@@ -1,132 +1,148 @@
-/* 共通スタイル */
-body {
+/* html, body のリセット */
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+  }
+  
+  /* フルスクリーンの背景・中央揃え */
+  body {
     font-family: Arial, sans-serif;
-    text-align: center;
     background-color: #f0f0f0;
-    margin-top: 50px;
-}
-
-/* カードコンテナ */
-#card-container {
-    position: relative;
-    width: 300px;
-    height: 250px;
-    margin: 0 auto;
-    border: 1px solid #ccc;
-    background-color: #fff;
     display: flex;
     align-items: center;
     justify-content: center;
-    cursor: pointer;
-    user-select: none;
-}
-
-/* 単語表示 */
-#card-word {
-    font-size: 2em;
-}
-
-/* 単語番号表示（右下） */
-#word-number {
+  }
+  
+  /* カードコンテナ：画面全体を使う */
+  #card-container {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    padding: 2vh 2vw;
+    box-sizing: border-box;
+    overflow: hidden;
+  }
+  
+  /* フラッシュカード部分（背景カード） */
+  #card {
+    width: 90%;
+    max-width: 600px;
+    height: 90%;
+    max-height: 800px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    overflow: hidden;
+  }
+  
+  /* 単語表示。clampでフォントサイズを画面サイズに合わせて調整 */
+  #card-word {
+    font-size: clamp(2em, 5vw, 3em);
+  }
+  
+  /* 単語番号（右下に小さく表示） */
+  #word-number {
     position: absolute;
-    bottom: 5px;
-    right: 5px;
-    font-size: 0.8em;
+    bottom: 2%;
+    right: 2%;
+    font-size: clamp(0.8em, 2vw, 1em);
     color: #888;
-}
-
-/* オーバーレイ：詳細情報＆回答ボタン */
-#overlay {
+  }
+  
+  /* オーバーレイ（フラッシュカードをめくった時の詳細情報表示） */
+  #overlay {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(255, 255, 255, 0.95);
+    background: rgba(255,255,255,0.95);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 1vh;
+    padding: 2vh 2vw;
+    box-sizing: border-box;
+    overflow-y: auto;
+  }
+  #overlay.hidden {
+    display: none;
+  }
+  
+  /* pinyin行 */
+  .pinyin-row {
+    width: 100%;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    gap: 1vw;
+    font-size: clamp(1.3em, 3vw, 1.5em);
+    margin: 0;
+  }
+  
+  /* 意味テキスト */
+  #meaning {
+    font-size: clamp(1em, 2.5vw, 1.2em);
+    word-wrap: break-word;
+    width: 100%;
+    text-align: center;
+  }
+  
+  /* 例文行：例文再生ボタンとテキストを横並び */
+  .example-row {
+    width: 100%;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    gap: 1vw;
+    font-size: clamp(0.9em, 2vw, 1em);
+    line-height: 1.4;
+    margin: 0;
+  }
+  
+  /* 回答ボタン行 */
+  .buttons-row {
+    width: 100%;
+    text-align: center;
+    display: flex;
+    gap: 2vw;
+    margin-top: 2vh;
+    justify-content: center;
+  }
+  
+  /* ボタン共通 */
+  button {
+    font-size: clamp(1em, 2.5vw, 1.2em);
+    padding: 1vh 2vw;
+    cursor: pointer;
+  }
+  
+  /* リセットコンテナ（終了時表示） */
+  #reset-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: #f0f0f0;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 10px;
-    padding: 10px;
-}
-
-#overlay.hidden {
+  }
+  #reset-container.hidden {
     display: none;
-}
-
-.pinyin-row {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 1.5em;
-}
-
-#meaning {
-    font-size: 1.2em;
-}
-
-.example-row {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 1em;
-    text-align: left;
-    width: 90%;
-    line-height: 1.4;
-}
-
-.buttons-row {
-    display: flex;
-    gap: 20px;
-    margin-top: 10px;
-}
-
-button {
-    font-size: 1.2em;
-    padding: 10px 20px;
-    cursor: pointer;
-}
-
-/* リセットコンテナ */
-#reset-container {
-    margin-top: 20px;
-}
-#reset-container.hidden {
-    display: none;
-}
-
-.reset-message {
-    font-size: 1.5em;
-    margin-bottom: 10px;
-}
-
-/* スマートフォン向け調整 */
-@media (max-width: 600px) {
-    #card-container {
-        width: 90%;
-        height: auto;
-        padding: 20px;
-    }
-
-    #card-word {
-        font-size: 1.8em;
-    }
-
-    #word-number {
-        font-size: 0.7em;
-    }
-
-    .pinyin-row {
-        font-size: 1.3em;
-    }
-
-    .example-row {
-        font-size: 0.9em;
-    }
-
-    button {
-        font-size: 1em;
-        padding: 8px 16px;
-    }
-}
+  }
+  .reset-message {
+    font-size: clamp(1.5em, 3vw, 2em);
+    margin-bottom: 2vh;
+  }
+  
