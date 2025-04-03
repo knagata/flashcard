@@ -1,71 +1,103 @@
 const express = require('express');
-const fs = require('fs');
+const { createClient } = require('@supabase/supabase-js');
 const path = require('path');
+require('dotenv').config(); // .env を利用する場合
+
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 app.use(express.json());
-// publicフォルダ内の静的ファイル（words.json, mp3/ など）を提供
+// public フォルダ内の静的ファイルを提供
 app.use(express.static('public'));
 
-const resultsFilePath = path.join(__dirname, 'results.json');
+// 環境変数から Supabase の URL と anon key を取得
+const supabaseUrl = process.env.SUPABASE_URL;
+const supabaseKey = process.env.SUPABASE_KEY;
+const supabase = createClient(supabaseUrl, supabaseKey);
 
-// 結果データを読み込む（存在しなければ空オブジェクト）
-function loadResults() {
-  if (fs.existsSync(resultsFilePath)) {
-    return JSON.parse(fs.readFileSync(resultsFilePath, 'utf8'));
-  }
-  return {};
-}
-
-// 結果データを保存
-function saveResults(results) {
-  fs.writeFileSync(resultsFilePath, JSON.stringify(results));
-}
-
-// GET /results: 結果データ取得
-app.get('/results', (req, res) => {
-  res.json(loadResults());
+/**
+ * GET /results
+ * Supabase の "results" テーブルから全レコードを取得し、クライアントに返す
+ */
+app.get('/results', async (req, res) => {
+  const { data, error } = await supabase
+    .from('results')
+    .select('*');
+  if (error) return res.status(500).json({ error: error.message });
+  res.json(data);
 });
 
-// POST /results: 単語の回答記録更新
-// リクエスト例：{ word: "從", result: "superCorrect" / "correct" / "incorrect" }
-app.post('/results', (req, res) => {
+/**
+ * POST /results
+ * クライアントから { word, result } を受け取り、結果を更新または挿入する。
+ * result は "superCorrect" / "correct" / "incorrect" のいずれか。
+ * "superCorrect" の場合は現在の日時を last_super_correct に記録する。
+ */
+app.post('/results', async (req, res) => {
   const { word, result } = req.body;
   if (!word || !["superCorrect", "correct", "incorrect"].includes(result)) {
     return res.status(400).json({ error: "Invalid input" });
   }
-  let results = loadResults();
-  if (!results[word]) {
-    results[word] = { history: [] };
+
+  // 既存レコードを取得
+  const { data: existing, error } = await supabase
+    .from('results')
+    .select('*')
+    .eq('word', word)
+    .single();
+  if (error && error.code !== 'PGRST116') {
+    // エラーコード PGRST116 は「レコードが存在しない」場合
+    return res.status(500).json({ error: error.message });
+  }
+
+  let history = [];
+  let last_super_correct = null;
+  if (existing) {
+    history = existing.history || [];
   }
   if (result === "superCorrect") {
-    results[word].history.push(1);
-    results[word].lastSuperCorrect = new Date().toISOString();
+    history.push(1);
+    last_super_correct = new Date().toISOString();
   } else if (result === "correct") {
-    results[word].history.push(1);
+    history.push(1);
   } else {
-    results[word].history.push(0);
+    history.push(0);
   }
   // 直近20件に絞る
-  if (results[word].history.length > 20) {
-    results[word].history = results[word].history.slice(-20);
+  if (history.length > 20) {
+    history = history.slice(-20);
   }
-  // 正答率はレスポンスに含める
-  const total = results[word].history.length;
-  const sum = results[word].history.reduce((a, b) => a + b, 0);
+  // 正答率計算
+  const total = history.length;
+  const sum = history.reduce((a, b) => a + b, 0);
   const accuracy = Math.round((sum / total) * 100);
-  saveResults(results);
+
+  if (existing) {
+    // レコード更新
+    const { error: updateError } = await supabase
+      .from('results')
+      .update({ history, last_super_correct })
+      .eq('word', word);
+    if (updateError) return res.status(500).json({ error: updateError.message });
+  } else {
+    // レコード新規挿入
+    const { error: insertError } = await supabase
+      .from('results')
+      .insert([{ word, history, last_super_correct }]);
+    if (insertError) return res.status(500).json({ error: insertError.message });
+  }
   res.json({ success: true, accuracy });
 });
 
-// リセット用エンドポイント：全単語の lastSuperCorrect を削除
-app.post('/resetResults', (req, res) => {
-  let results = loadResults();
-  Object.keys(results).forEach(word => {
-    delete results[word].lastSuperCorrect;
-  });
-  saveResults(results);
+/**
+ * POST /resetResults
+ * すべてのレコードの last_super_correct を NULL に更新する（リセット処理）
+ */
+app.post('/resetResults', async (req, res) => {
+  const { error } = await supabase
+    .from('results')
+    .update({ last_super_correct: null });
+  if (error) return res.status(500).json({ error: error.message });
   res.json({ success: true });
 });
 
