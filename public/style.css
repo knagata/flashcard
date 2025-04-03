@@ -15,7 +15,7 @@ html, body {
     font-family: Arial, sans-serif;
   }
   
-  /* カードコンテナ：ウィンドウ全体を利用 */
+  /* カードコンテナ：ウィンドウ全体 */
   #card-container {
     position: relative;
     width: 100vw;
@@ -27,97 +27,92 @@ html, body {
     justify-content: center;
   }
   
-  /* 単語表示（サイズを大きめに調整） */
+  /* 単語表示（大きめのフォントサイズで中央揃え） */
   #card-word {
-    font-size: 8vw;  /* 以前の5vwから約2段階アップ */
+    font-size: 8vw; /* PC版: 8vw; 調整可能 */
     text-align: center;
   }
   
-  /* 単語番号（右下に常に表示、z-indexを高く設定） */
+  /* 単語番号（右下、常に表示） */
   #word-number {
     position: absolute;
     bottom: 2%;
     right: 2%;
-    font-size: 4vw;  /* 以前の2vwからアップ */
+    font-size: 4vw;
     color: #888;
     z-index: 10;
   }
   
-  /* オーバーレイ：詳細情報＆回答ボタン（初期は非表示） */
+  /* オーバーレイ：詳細情報＆回答ボタン、初期は非表示 */
   #overlay {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(255,255,255,0.95);
-    display: none;  /* 初期は非表示 */
+    background: rgba(255, 255, 255, 0.95);
+    display: none; /* 初期は非表示 */
     flex-direction: column;
     justify-content: center;
     align-items: center;
     padding: 2%;
     box-sizing: border-box;
-    overflow: hidden; /* 内部スクロール不要 */
-    z-index: 1; /* 単語番号の下 */
+    overflow: hidden;
+    z-index: 1;
   }
   
+  /* オーバーレイ表示時 */
   #overlay.visible {
     display: flex;
   }
   
-  /* pinyin行 */
-  .pinyin-row {
+  /* 各行のスタイル */
+  .pinyin-row,
+  .example-row,
+  .buttons-row {
     width: 100%;
     text-align: center;
     margin: 0.5vw 0;
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 2vw;
-    font-size: 5vw; /* 以前の3vwからアップ */
+    gap: 1vw;
   }
   
-  /* 意味のテキスト */
+  .pinyin-row {
+    font-size: 5vw;
+  }
+  
   #meaning {
     width: 100%;
     text-align: center;
-    font-size: 4vw;  /* 以前の2.5vwからアップ */
+    font-size: 4vw;
     margin: 1vw 0;
     word-wrap: break-word;
   }
   
-  /* 例文行：例文再生ボタンとテキスト */
   .example-row {
-    width: 100%;
-    text-align: center;
-    margin: 0.5vw 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 2vw;
-    font-size: 3vw;  /* 以前の2vwからアップ */
+    font-size: 3vw;
     line-height: 1.4;
   }
   
-  /* 回答ボタン行 */
   .buttons-row {
-    width: 100%;
-    text-align: center;
+    font-size: 3vw;
+    gap: 2vw;
     margin-top: 2vw;
-    display: flex;
-    gap: 4vw;
     justify-content: center;
-    font-size: 3vw;  /* 以前の2vwからアップ */
   }
   
-  /* ボタン共通 */
+  /* ボタン共通（固定幅を指定） */
   button {
-    font-size: 3vw;  /* 以前の2vwからアップ */
-    padding: 1.5vw 3vw;  /* やや大きめに */
+    width: 10vw; /* PC版の固定幅 */
+    font-size: 3vw;
+    padding: 1.5vw 2vw;
     cursor: pointer;
+    box-sizing: border-box;
   }
   
-  /* リセットコンテナ：全画面中央表示 */
+  /* リセットコンテナ：全画面中央表示、初期は非表示 */
   #reset-container {
     position: absolute;
     top: 0;
@@ -125,7 +120,7 @@ html, body {
     width: 100vw;
     height: 100vh;
     background-color: #f0f0f0;
-    display: none;  /* 初期は非表示 */
+    display: none;
     flex-direction: column;
     justify-content: center;
     align-items: center;
@@ -138,11 +133,11 @@ html, body {
   }
   
   .reset-message {
-    font-size: 6vw;  /* 以前の3vwからアップ */
+    font-size: 6vw;
     margin-bottom: 2vw;
   }
   
-  /* スマートフォン向け調整（max-width: 600px） */
+  /* スマートフォン向け調整 */
   @media (max-width: 600px) {
     #card-container {
       width: 100vw;
@@ -168,8 +163,9 @@ html, body {
       font-size: 6vw;
     }
     button {
-      font-size: 18vw;
-      padding: 6vw 12vw;
+      width: 20vw;  /* スマホ版は大きめの固定幅 */
+      font-size: 6vw;
+      padding: 2vw 4vw;
     }
     .reset-message {
       font-size: 8vw;
