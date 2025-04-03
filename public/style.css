@@ -1,22 +1,24 @@
 /* html, body のリセットと全画面表示 */
-html, body {
+html,
+body {
     margin: 0;
     padding: 0;
     width: 100%;
     height: 100%;
-    overflow: hidden; /* スクロールバー非表示 */
-  }
-  
-  body {
+    overflow: hidden;
+    /* スクロールバー非表示 */
+}
+
+body {
     display: flex;
     align-items: center;
     justify-content: center;
     background-color: #f0f0f0;
     font-family: Arial, sans-serif;
-  }
-  
-  /* カードコンテナ：ウィンドウ全体 */
-  #card-container {
+}
+
+/* カードコンテナ：ウィンドウ全体 */
+#card-container {
     position: relative;
     width: 100vw;
     height: 100vh;
@@ -25,33 +27,35 @@ html, body {
     display: flex;
     align-items: center;
     justify-content: center;
-  }
-  
-  /* 単語表示（大きめのフォントサイズで中央揃え） */
-  #card-word {
-    font-size: 8vw; /* PC版: 8vw; 調整可能 */
+}
+
+/* 単語表示（大きめのフォントサイズで中央揃え） */
+#card-word {
+    font-size: 8vw;
+    /* PC版: 8vw; 調整可能 */
     text-align: center;
-  }
-  
-  /* 単語番号（右下、常に表示） */
-  #word-number {
+}
+
+/* 単語番号（右下、常に表示） */
+#word-number {
     position: absolute;
     bottom: 2%;
     right: 2%;
     font-size: 4vw;
     color: #888;
     z-index: 10;
-  }
-  
-  /* オーバーレイ：詳細情報＆回答ボタン、初期は非表示 */
-  #overlay {
+}
+
+/* オーバーレイ：詳細情報＆回答ボタン、初期は非表示 */
+#overlay {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
     background: rgba(255, 255, 255, 0.95);
-    display: none; /* 初期は非表示 */
+    display: none;
+    /* 初期は非表示 */
     flex-direction: column;
     justify-content: center;
     align-items: center;
@@ -59,17 +63,17 @@ html, body {
     box-sizing: border-box;
     overflow: hidden;
     z-index: 1;
-  }
-  
-  /* オーバーレイ表示時 */
-  #overlay.visible {
+}
+
+/* オーバーレイ表示時 */
+#overlay.visible {
     display: flex;
-  }
-  
-  /* 各行のスタイル */
-  .pinyin-row,
-  .example-row,
-  .buttons-row {
+}
+
+/* 各行のスタイル */
+.pinyin-row,
+.example-row,
+.buttons-row {
     width: 100%;
     text-align: center;
     margin: 0.5vw 0;
@@ -77,44 +81,50 @@ html, body {
     justify-content: center;
     align-items: center;
     gap: 1vw;
-  }
-  
-  .pinyin-row {
+}
+
+.pinyin-row {
     font-size: 5vw;
-  }
-  
-  #meaning {
+}
+
+#meaning {
     width: 100%;
     text-align: center;
     font-size: 4vw;
     margin: 1vw 0;
     word-wrap: break-word;
-  }
-  
-  .example-row {
+}
+
+.example-row {
     font-size: 3vw;
     line-height: 1.4;
-  }
-  
-  .buttons-row {
+}
+
+.buttons-row {
     font-size: 3vw;
     gap: 2vw;
     margin-top: 2vw;
     justify-content: center;
-  }
-  
-  /* ボタン共通（固定幅を指定） */
-  button {
-    width: 10vw; /* PC版の固定幅 */
+}
+
+/* ボタン共通（固定幅を指定） */
+button {
+    width: 10vw;
     height: 8vw;
     font-size: 3vw;
     padding: 1.5vw 2vw;
     cursor: pointer;
     box-sizing: border-box;
-  }
-  
-  /* リセットコンテナ：全画面中央表示、初期は非表示 */
-  #reset-container {
+}
+
+/* リセットボタンのみ固定幅を解除 */
+#resetBtn {
+    width: auto;
+    height: auto;
+}
+
+/* リセットコンテナ：全画面中央表示、初期は非表示 */
+#reset-container {
     position: absolute;
     top: 0;
     left: 0;
@@ -127,50 +137,62 @@ html, body {
     align-items: center;
     box-sizing: border-box;
     z-index: 10;
-  }
-  
-  #reset-container.visible {
+}
+
+#reset-container.visible {
     display: flex;
-  }
-  
-  .reset-message {
+}
+
+.reset-message {
     font-size: 6vw;
     margin-bottom: 2vw;
-  }
-  
-  /* スマートフォン向け調整 */
-  @media (max-width: 768px) {
+}
+
+/* スマートフォン向け調整 */
+@media (max-width: 768px) {
     #card-container {
-      width: 100vw;
-      height: 100vh;
-      padding: 4vw;
+        width: 100vw;
+        height: 100vh;
+        padding: 4vw;
     }
+
     #card-word {
-      font-size: 12vw;
+        font-size: 12vw;
     }
+
     #word-number {
-      font-size: 6vw;
+        font-size: 6vw;
     }
+
     .pinyin-row {
-      font-size: 8vw;
+        font-size: 8vw;
     }
+
     #meaning {
-      font-size: 7vw;
+        font-size: 7vw;
     }
+
     .example-row {
-      font-size: 6vw;
+        font-size: 6vw;
     }
+
     .buttons-row {
-      font-size: 6vw;
+        font-size: 6vw;
     }
+
     button {
-      width: 20vw;  /* スマホ版は大きめの固定幅 */
-      height: 16vw;
-      font-size: 6vw;
-      padding: 2vw 4vw;
+        width: 20vw;
+        /* スマホ版は大きめの固定幅 */
+        height: 16vw;
+        font-size: 6vw;
+        padding: 2vw 4vw;
     }
+    #resetBtn {
+        width: auto;
+        height: auto;
+    }
+
     .reset-message {
-      font-size: 8vw;
+        font-size: 8vw;
     }
-  }
-  
+}
