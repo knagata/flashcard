@@ -1,64 +1,65 @@
-/* html, body をリセットして全画面表示 */
+/* html, body のリセットと全画面表示 */
 html, body {
     margin: 0;
     padding: 0;
+    width: 100%;
     height: 100%;
+    overflow: hidden;  /* スクロールバー非表示 */
   }
   
-  /* 背景と中央揃え */
   body {
     display: flex;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
     background-color: #f0f0f0;
     font-family: Arial, sans-serif;
   }
   
-  /* カードコンテナ（中央に配置、固定サイズ） */
+  /* カードコンテナ：ウィンドウ全体を利用 */
   #card-container {
     position: relative;
-    width: 320px;
-    height: 400px;
+    width: 100vw;
+    height: 100vh;
     background-color: #fff;
-    border: 1px solid #ccc;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
   
   /* 単語表示 */
   #card-word {
-    font-size: 2.5rem;
-    margin: 20px;
+    font-size: 5vw;  /* viewport 単位で自動調整 */
     text-align: center;
   }
   
-  /* 単語番号（右下に表示） */
+  /* 単語番号（右下） */
   #word-number {
     position: absolute;
-    bottom: 10px;
-    right: 10px;
-    font-size: 1rem;
+    bottom: 2%;
+    right: 2%;
+    font-size: 2vw;
     color: #888;
   }
   
-  /* オーバーレイ（フラッシュカードをめくった時の詳細情報） */
+  /* オーバーレイ：詳細情報＆回答ボタン（初期は非表示） */
   #overlay {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(255,255,255,0.95);
-    display: none; /* 初期は非表示 */
+    background: rgba(255, 255, 255, 0.95);
+    display: none;  /* 非表示 */
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: 20px;
+    padding: 2%;
     box-sizing: border-box;
-    overflow-y: auto;
+    overflow: hidden;
   }
   
-  /* オーバーレイ表示時のクラス（JSで display: flex に切り替え） */
+  /* 表示時は .visible クラスで切り替え */
   #overlay.visible {
     display: flex;
   }
@@ -69,47 +70,56 @@ html, body {
   .buttons-row {
     width: 100%;
     text-align: center;
-    margin: 5px 0;
+    margin: 0.5vw 0;
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 10px;
+    gap: 1vw;
   }
   
   .pinyin-row {
-    font-size: 1.5rem;
+    font-size: 3vw;
   }
   
   #meaning {
-    font-size: 1.2rem;
-    margin: 10px 0;
+    width: 100%;
+    text-align: center;
+    font-size: 2.5vw;
+    margin: 1vw 0;
     word-wrap: break-word;
   }
   
   .example-row {
-    font-size: 1rem;
+    font-size: 2vw;
     line-height: 1.4;
   }
   
-  .buttons-row button {
-    font-size: 1.2rem;
-    padding: 10px;
-    margin: 0 5px;
+  .buttons-row {
+    font-size: 2vw;
+    gap: 2vw;
+    margin-top: 2vw;
   }
   
-  /* リセットコンテナ（全画面中央表示） */
+  /* ボタン共通 */
+  button {
+    font-size: 2vw;
+    padding: 1vw 2vw;
+    cursor: pointer;
+  }
+  
+  /* リセットコンテナ：全画面中央表示（初期非表示） */
   #reset-container {
-    display: none;
     position: absolute;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
+    width: 100vw;
+    height: 100vh;
     background-color: #f0f0f0;
-    display: flex;
+    display: none;  /* 非表示 */
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    box-sizing: border-box;
   }
   
   #reset-container.visible {
@@ -117,38 +127,33 @@ html, body {
   }
   
   .reset-message {
-    font-size: 1.5rem;
-    margin-bottom: 10px;
+    font-size: 3vw;
+    margin-bottom: 2vw;
   }
   
-  /* スマートフォン向け調整 */
+  /* スマートフォン向けの微調整（画面幅600px以下） */
   @media (max-width: 600px) {
-    #card-container {
-      width: 90%;
-      height: auto;
-      padding: 20px;
-    }
     #card-word {
-      font-size: 2rem;
+      font-size: 6vw;
     }
     #word-number {
-      font-size: 0.9rem;
+      font-size: 3vw;
     }
     .pinyin-row {
-      font-size: 1.3rem;
+      font-size: 4vw;
     }
     #meaning {
-      font-size: 1.1rem;
+      font-size: 3vw;
     }
     .example-row {
-      font-size: 0.9rem;
+      font-size: 2.5vw;
     }
-    .buttons-row button {
-      font-size: 1rem;
-      padding: 8px;
+    button {
+      font-size: 2.5vw;
+      padding: 1.5vw 3vw;
     }
     .reset-message {
-      font-size: 1.3rem;
+      font-size: 4vw;
     }
   }
   
