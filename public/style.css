@@ -51,6 +51,10 @@ body {
     padding: 10px;
 }
 
+#overlay.hidden {
+    display: none;
+}
+
 .pinyin-row {
     display: flex;
     align-items: center;
@@ -88,13 +92,14 @@ button {
 #reset-container {
     margin-top: 20px;
 }
+#reset-container.hidden {
+    display: none;
+}
 
 .reset-message {
     font-size: 1.5em;
     margin-bottom: 10px;
 }
-
-.hidden { display: none; }
 
 /* スマートフォン向け調整 */
 @media (max-width: 600px) {
