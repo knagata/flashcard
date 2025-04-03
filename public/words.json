@@ -99,7 +99,7 @@
     }
   },
   {
-    "number": 10,
+    "number": [0, 10],
     "word": "嗎",
     "pinyin": "ma",
     "meaning": "〜か？",
@@ -209,7 +209,7 @@
     }
   },
   {
-    "number": 20,
+    "number": [0, 20],
     "word": "對不起",
     "pinyin": "duìbuqǐ",
     "meaning": "申し訳ない、すみません",
@@ -319,7 +319,7 @@
     }
   },
   {
-    "number": 30,
+    "number": [0, 30],
     "word": "他們",
     "pinyin": "tāmen",
     "meaning": "彼ら",
@@ -429,7 +429,7 @@
     }
   },
   {
-    "number": 40,
+    "number": [0, 40],
     "word": "叫",
     "pinyin": "jiào",
     "meaning": "名前は〜という",
@@ -539,7 +539,7 @@
     }
   },
   {
-    "number": 50,
+    "number": [0, 50],
     "word": "孩子",
     "pinyin": "háizi",
     "meaning": "子供",
@@ -649,7 +649,7 @@
     }
   },
   {
-    "number": 60,
+    "number": [0, 60],
     "word": "七",
     "pinyin": "qī",
     "meaning": "7",
@@ -759,7 +759,7 @@
     }
   },
   {
-    "number": 70,
+    "number": [0, 70],
     "word": "第",
     "pinyin": "dì",
     "meaning": "第〜、〜番目の",
@@ -869,7 +869,7 @@
     }
   },
   {
-    "number": 80,
+    "number": [0, 80],
     "word": "明年",
     "pinyin": "míngnián",
     "meaning": "来年",
@@ -979,7 +979,7 @@
     }
   },
   {
-    "number": 90,
+    "number": [0, 90],
     "word": "年",
     "pinyin": "nián",
     "meaning": "年",
@@ -1089,7 +1089,7 @@
     }
   },
   {
-    "number": 100,
+    "number": [0, 100],
     "word": "點",
     "pinyin": "diǎn",
     "meaning": "〜時",
@@ -1100,7 +1100,7 @@
     }
   },
   {
-    "number": 101,
+    "number": [0, 101],
     "word": "分",
     "pinyin": "fēn",
     "meaning": "〜分",
@@ -1111,7 +1111,7 @@
     }
   },
   {
-    "number": 102,
+    "number": [0, 102],
     "word": "時候",
     "pinyin": "shíhòu",
     "meaning": "〜のとき、とき、時間",
@@ -1122,7 +1122,7 @@
     }
   },
   {
-    "number": 103,
+    "number": [0, 103],
     "word": "以前",
     "pinyin": "yǐqián",
     "meaning": "以前、昔、〜の前",
@@ -1133,7 +1133,7 @@
     }
   },
   {
-    "number": 104,
+    "number": [0, 104],
     "word": "以後",
     "pinyin": "yǐhòu",
     "meaning": "以後、今後、〜のあと",
@@ -1144,7 +1144,7 @@
     }
   },
   {
-    "number": 105,
+    "number": [0, 105],
     "word": "先",
     "pinyin": "xiān",
     "meaning": "先に、まず",
@@ -1155,7 +1155,7 @@
     }
   },
   {
-    "number": 106,
+    "number": [0, 106],
     "word": "在",
     "pinyin": "zài",
     "meaning": "〜で、〜に",
@@ -1166,7 +1166,7 @@
     }
   },
   {
-    "number": 107,
+    "number": [0, 107],
     "word": "這裡",
     "pinyin": "zhèlǐ",
     "meaning": "ここ、そこ",
@@ -1177,7 +1177,7 @@
     }
   },
   {
-    "number": 108,
+    "number": [0, 108],
     "word": "這兒",
     "pinyin": "zhè'er",
     "meaning": "ここ、そこ",
@@ -1188,7 +1188,7 @@
     }
   },
   {
-    "number": 109,
+    "number": [0, 109],
     "word": "那裡",
     "pinyin": "nàlǐ",
     "meaning": "そこには",
@@ -1199,7 +1199,7 @@
     }
   },
   {
-    "number": 110,
+    "number": [0, 110],
     "word": "那兒",
     "pinyin": "nà'er",
     "meaning": "そこには",
@@ -1309,7 +1309,7 @@
     }
   },
   {
-    "number": 120,
+    "number": [0, 120],
     "word": "旁邊",
     "pinyin": "pángbiān",
     "meaning": "そば、かたわら",
@@ -1419,7 +1419,7 @@
     }
   },
   {
-    "number": 130,
+    "number": [0, 130],
     "word": "手",
     "pinyin": "shǒu",
     "meaning": "手",
@@ -1529,7 +1529,7 @@
     }
   },
   {
-    "number": 140,
+    "number": [0, 140],
     "word": "多",
     "pinyin": "duō",
     "meaning": "多くの",
@@ -1639,7 +1639,7 @@
     }
   },
   {
-    "number": 150,
+    "number": [0, 150],
     "word": "有趣",
     "pinyin": "yǒuqù",
     "meaning": "面白い",
@@ -1749,7 +1749,7 @@
     }
   },
   {
-    "number": 160,
+    "number": [0, 160],
     "word": "意思",
     "pinyin": "yìsi",
     "meaning": "意味、気持ち、趣",
@@ -1859,7 +1859,7 @@
     }
   },
   {
-    "number": 170,
+    "number": [0, 170],
     "word": "進來",
     "pinyin": "jìnlái",
     "meaning": "お入りください",
@@ -1969,7 +1969,7 @@
     }
   },
   {
-    "number": 180,
+    "number": [0, 180],
     "word": "練習",
     "pinyin": "liànxí",
     "meaning": "練習する",
@@ -2079,7 +2079,7 @@
     }
   },
   {
-    "number": 190,
+    "number": [0, 190],
     "word": "給",
     "pinyin": "gěi",
     "meaning": "与える",
@@ -2189,7 +2189,7 @@
     }
   },
   {
-    "number": 200,
+    "number": [0, 200],
     "word": "電腦",
     "pinyin": "diànnǎo",
     "meaning": "コンピューター",
@@ -2200,7 +2200,7 @@
     }
   },
   {
-    "number": 201,
+    "number": [0, 201],
     "word": "手機",
     "pinyin": "shǒujī",
     "meaning": "携帯電話",
@@ -2211,7 +2211,7 @@
     }
   },
   {
-    "number": 202,
+    "number": [0, 202],
     "word": "號碼",
     "pinyin": "hàomǎ",
     "meaning": "番号",
@@ -2222,7 +2222,7 @@
     }
   },
   {
-    "number": 203,
+    "number": [0, 203],
     "word": "衣服",
     "pinyin": "yīfú",
     "meaning": "衣類",
@@ -2233,7 +2233,7 @@
     }
   },
   {
-    "number": 204,
+    "number": [0, 204],
     "word": "鞋子",
     "pinyin": "xiézi",
     "meaning": "靴",
@@ -2244,7 +2244,7 @@
     }
   },
   {
-    "number": 205,
+    "number": [0, 205],
     "word": "褲子",
     "pinyin": "kùzi",
     "meaning": "パンツ",
@@ -2255,7 +2255,7 @@
     }
   },
   {
-    "number": 206,
+    "number": [0, 206],
     "word": "穿",
     "pinyin": "chuān",
     "meaning": "着る",
@@ -2266,7 +2266,7 @@
     }
   },
   {
-    "number": 207,
+    "number": [0, 207],
     "word": "紙",
     "pinyin": "zhǐ",
     "meaning": "紙",
@@ -2277,7 +2277,7 @@
     }
   },
   {
-    "number": 208,
+    "number": [0, 208],
     "word": "信",
     "pinyin": "xìn",
     "meaning": "手紙",
@@ -2288,7 +2288,7 @@
     }
   },
   {
-    "number": 209,
+    "number": [0, 209],
     "word": "家",
     "pinyin": "jiā",
     "meaning": "家",
@@ -2299,7 +2299,7 @@
     }
   },
   {
-    "number": 210,
+    "number": [0, 210],
     "word": "房子",
     "pinyin": "fángzi",
     "meaning": "家、部屋",
@@ -2409,7 +2409,7 @@
     }
   },
   {
-    "number": 220,
+    "number": [0, 220],
     "word": "中學",
     "pinyin": "zhōngxué",
     "meaning": "中学校",
@@ -2519,7 +2519,7 @@
     }
   },
   {
-    "number": 230,
+    "number": [0, 230],
     "word": "英文",
     "pinyin": "Yīngwén",
     "meaning": "英語",
@@ -2629,7 +2629,7 @@
     }
   },
   {
-    "number": 240,
+    "number": [0, 240],
     "word": "公司",
     "pinyin": "gōngsī",
     "meaning": "会社",
@@ -2739,7 +2739,7 @@
     }
   },
   {
-    "number": 250,
+    "number": [0, 250],
     "word": "魚",
     "pinyin": "yú",
     "meaning": "魚",
@@ -2849,7 +2849,7 @@
     }
   },
   {
-    "number": 260,
+    "number": [0, 260],
     "word": "飯館",
     "pinyin": "fànguǎn",
     "meaning": "レストラン",
@@ -2959,7 +2959,7 @@
     }
   },
   {
-    "number": 270,
+    "number": [0, 270],
     "word": "唱歌",
     "pinyin": "chànggē",
     "meaning": "歌う",
@@ -3069,7 +3069,7 @@
     }
   },
   {
-    "number": 280,
+    "number": [0, 280],
     "word": "開車",
     "pinyin": "kāichē",
     "meaning": "運転する",
@@ -3179,7 +3179,7 @@
     }
   },
   {
-    "number": 290,
+    "number": [0, 290],
     "word": "風",
     "pinyin": "fēng",
     "meaning": "風",
@@ -3289,7 +3289,7 @@
     }
   },
   {
-    "number": 300,
+    "number": [0, 300],
     "word": "每",
     "pinyin": "měi",
     "meaning": "〜のたび、それぞれの",
@@ -3300,7 +3300,7 @@
     }
   },
   {
-    "number": 301,
+    "number": [0, 301],
     "word": "常常",
     "pinyin": "chángcháng",
     "meaning": "よく、しょっちゅう",
@@ -3311,7 +3311,7 @@
     }
   },
   {
-    "number": 302,
+    "number": [0, 302],
     "word": "也",
     "pinyin": "yě",
     "meaning": "〜も、〜でも、〜さえも",
@@ -3322,7 +3322,7 @@
     }
   },
   {
-    "number": 303,
+    "number": [0, 303],
     "word": "都",
     "pinyin": "dōu",
     "meaning": "どれも、すべて",
@@ -3333,7 +3333,7 @@
     }
   },
   {
-    "number": 304,
+    "number": [0, 304],
     "word": "只",
     "pinyin": "zhǐ",
     "meaning": "〜だけ、ただ〜",
@@ -3344,7 +3344,7 @@
     }
   },
   {
-    "number": 305,
+    "number": [0, 305],
     "word": "多",
     "pinyin": "duō",
     "meaning": "たくさん、よく",
@@ -3355,7 +3355,7 @@
     }
   },
   {
-    "number": 306,
+    "number": [0, 306],
     "word": "一點兒",
     "pinyin": "yìdiǎnr",
     "meaning": "少し",
@@ -3366,7 +3366,7 @@
     }
   },
   {
-    "number": 307,
+    "number": [0, 307],
     "word": "一些",
     "pinyin": "yīxiē",
     "meaning": "いくつかの",
@@ -3377,7 +3377,7 @@
     }
   },
   {
-    "number": 308,
+    "number": [0, 308],
     "word": "一起",
     "pinyin": "yìqǐ",
     "meaning": "一緒に",
@@ -3388,7 +3388,7 @@
     }
   },
   {
-    "number": 309,
+    "number": [0, 309],
     "word": "比",
     "pinyin": "bǐ",
     "meaning": "〜より、〜に比べて",
@@ -3399,7 +3399,7 @@
     }
   },
   {
-    "number": 310,
+    "number": [0, 310],
     "word": "和",
     "pinyin": "hé",
     "meaning": "〜と〜",
@@ -3509,7 +3509,7 @@
     }
   },
   {
-    "number": 320,
+    "number": [0, 320],
     "word": "得",
     "pinyin": "de / děi",
     "meaning": "動詞や形容詞のあとにおいて補語を導く",
@@ -3619,7 +3619,7 @@
     }
   },
   {
-    "number": 330,
+    "number": [0, 330],
     "word": "往",
     "pinyin": "wǎng",
     "meaning": "〜にむかって、〜の方へ",
