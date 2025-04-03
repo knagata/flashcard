@@ -119,7 +119,10 @@
   
     // 複合キーを文字列に変換する関数
     function keyForWord(word) {
-      // 例: [1,2] → "1-2"
+      if (!Array.isArray(word.number)) {
+        console.error("デバッグ: word.number が配列ではありません。word の内容:", word);
+        throw new Error("word.number is not an array. Please check words.json data format.");
+      }
       return word.number.join('-');
     }
   
