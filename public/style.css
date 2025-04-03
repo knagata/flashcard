@@ -1,62 +1,47 @@
-/* html, body のリセット */
+/* html, body をリセットして全画面表示 */
 html, body {
     margin: 0;
     padding: 0;
-    width: 100%;
     height: 100%;
   }
   
-  /* フルスクリーンの背景・中央揃え */
+  /* 背景と中央揃え */
   body {
-    font-family: Arial, sans-serif;
-    background-color: #f0f0f0;
     display: flex;
-    align-items: center;
     justify-content: center;
+    align-items: center;
+    background-color: #f0f0f0;
+    font-family: Arial, sans-serif;
   }
   
-  /* カードコンテナ：画面全体を使う */
+  /* カードコンテナ（中央に配置、固定サイズ） */
   #card-container {
     position: relative;
-    width: 100vw;
-    height: 100vh;
-    padding: 2vh 2vw;
-    box-sizing: border-box;
-    overflow: hidden;
-  }
-  
-  /* フラッシュカード部分（背景カード） */
-  #card {
-    width: 90%;
-    max-width: 600px;
-    height: 90%;
-    max-height: 800px;
+    width: 320px;
+    height: 400px;
     background-color: #fff;
     border: 1px solid #ccc;
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    box-sizing: border-box;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     overflow: hidden;
   }
   
-  /* 単語表示。clampでフォントサイズを画面サイズに合わせて調整 */
+  /* 単語表示 */
   #card-word {
-    font-size: clamp(2em, 5vw, 3em);
+    font-size: 2.5rem;
+    margin: 20px;
+    text-align: center;
   }
   
-  /* 単語番号（右下に小さく表示） */
+  /* 単語番号（右下に表示） */
   #word-number {
     position: absolute;
-    bottom: 2%;
-    right: 2%;
-    font-size: clamp(0.8em, 2vw, 1em);
+    bottom: 10px;
+    right: 10px;
+    font-size: 1rem;
     color: #888;
   }
   
-  /* オーバーレイ（フラッシュカードをめくった時の詳細情報表示） */
+  /* オーバーレイ（フラッシュカードをめくった時の詳細情報） */
   #overlay {
     position: absolute;
     top: 0;
@@ -64,85 +49,106 @@ html, body {
     width: 100%;
     height: 100%;
     background: rgba(255,255,255,0.95);
-    display: flex;
+    display: none; /* 初期は非表示 */
     flex-direction: column;
+    justify-content: center;
     align-items: center;
-    justify-content: flex-start;
-    gap: 1vh;
-    padding: 2vh 2vw;
+    padding: 20px;
     box-sizing: border-box;
     overflow-y: auto;
   }
-  #overlay.hidden {
-    display: none;
-  }
   
-  /* pinyin行 */
-  .pinyin-row {
-    width: 100%;
-    text-align: center;
+  /* オーバーレイ表示時のクラス（JSで display: flex に切り替え） */
+  #overlay.visible {
     display: flex;
-    align-items: center;
-    gap: 1vw;
-    font-size: clamp(1.3em, 3vw, 1.5em);
-    margin: 0;
   }
   
-  /* 意味テキスト */
-  #meaning {
-    font-size: clamp(1em, 2.5vw, 1.2em);
-    word-wrap: break-word;
-    width: 100%;
-    text-align: center;
-  }
-  
-  /* 例文行：例文再生ボタンとテキストを横並び */
-  .example-row {
-    width: 100%;
-    text-align: center;
-    display: flex;
-    align-items: center;
-    gap: 1vw;
-    font-size: clamp(0.9em, 2vw, 1em);
-    line-height: 1.4;
-    margin: 0;
-  }
-  
-  /* 回答ボタン行 */
+  /* 各行のスタイル */
+  .pinyin-row,
+  .example-row,
   .buttons-row {
     width: 100%;
     text-align: center;
+    margin: 5px 0;
     display: flex;
-    gap: 2vw;
-    margin-top: 2vh;
     justify-content: center;
+    align-items: center;
+    gap: 10px;
   }
   
-  /* ボタン共通 */
-  button {
-    font-size: clamp(1em, 2.5vw, 1.2em);
-    padding: 1vh 2vw;
-    cursor: pointer;
+  .pinyin-row {
+    font-size: 1.5rem;
   }
   
-  /* リセットコンテナ（終了時表示） */
+  #meaning {
+    font-size: 1.2rem;
+    margin: 10px 0;
+    word-wrap: break-word;
+  }
+  
+  .example-row {
+    font-size: 1rem;
+    line-height: 1.4;
+  }
+  
+  .buttons-row button {
+    font-size: 1.2rem;
+    padding: 10px;
+    margin: 0 5px;
+  }
+  
+  /* リセットコンテナ（全画面中央表示） */
   #reset-container {
+    display: none;
     position: absolute;
     top: 0;
     left: 0;
-    width: 100vw;
-    height: 100vh;
+    width: 100%;
+    height: 100%;
     background-color: #f0f0f0;
     display: flex;
     flex-direction: column;
-    align-items: center;
     justify-content: center;
+    align-items: center;
   }
-  #reset-container.hidden {
-    display: none;
+  
+  #reset-container.visible {
+    display: flex;
   }
+  
   .reset-message {
-    font-size: clamp(1.5em, 3vw, 2em);
-    margin-bottom: 2vh;
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+  }
+  
+  /* スマートフォン向け調整 */
+  @media (max-width: 600px) {
+    #card-container {
+      width: 90%;
+      height: auto;
+      padding: 20px;
+    }
+    #card-word {
+      font-size: 2rem;
+    }
+    #word-number {
+      font-size: 0.9rem;
+    }
+    .pinyin-row {
+      font-size: 1.3rem;
+    }
+    #meaning {
+      font-size: 1.1rem;
+    }
+    .example-row {
+      font-size: 0.9rem;
+    }
+    .buttons-row button {
+      font-size: 1rem;
+      padding: 8px;
+    }
+    .reset-message {
+      font-size: 1.3rem;
+    }
   }
   
