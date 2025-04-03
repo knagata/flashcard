@@ -30,6 +30,7 @@ app.get('/results', async (req, res) => {
  * リクエスト例: { number: [num1, num2], result: "superCorrect" / "correct" / "incorrect" }
  */
 app.post('/results', async (req, res) => {
+  console.log("Received POST /results payload:", req.body);
   const { number, result } = req.body;
   if (!number || !Array.isArray(number) || number.length !== 2 ||
       !["superCorrect", "correct", "incorrect"].includes(result)) {
