@@ -13,6 +13,10 @@ const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseKey = process.env.SUPABASE_KEY;
 const supabase = createClient(supabaseUrl, supabaseKey);
 
+function pgArray(arr) {
+  return `{${arr.join(',')}}`;
+}
+
 /**
  * GET /results
  * Supabase の "results" テーブルから全レコードを取得し、返す
@@ -41,7 +45,7 @@ app.post('/results', async (req, res) => {
   const { data: existing, error } = await supabase
     .from('results')
     .select('*')
-    .eq('number', number)
+    .eq('number', pgArray(number))
     .single();
   if (error && error.code !== 'PGRST116') {
     return res.status(500).json({ error: error.message });
@@ -71,7 +75,7 @@ app.post('/results', async (req, res) => {
     const { error: updateError } = await supabase
       .from('results')
       .update({ history, last_super_correct })
-      .eq('number', number);
+      .eq('number', pgArray(number))
     if (updateError) return res.status(500).json({ error: updateError.message });
   } else {
     const { error: insertError } = await supabase
