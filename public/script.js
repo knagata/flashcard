@@ -4,22 +4,21 @@ let activeWords = [];
 let currentIndex = 0;
 let resultsData = {};
 
-// 複合キーとしての単語番号をハイフン区切り文字列に変換
+// 複合キーとしての単語番号をハイフン区切り文字列に変換する関数
 function keyForWord(word) {
   if (!Array.isArray(word.number)) {
-    console.error("word.number is not an array. word:", word);
+    console.error("デバッグ: word.number が配列ではありません。word:", word);
     throw new Error("word.number is not an array. Please check words.json data format.");
   }
   return word.number.join('-');
 }
 
-// words.json と /results を読み込み、activeWords を設定する
+// words.json と /results を読み込み、activeWords をセットアップ
 Promise.all([
   fetch('words.json').then(r => r.json()),
   fetch('/results').then(r => r.json())
 ]).then(([wordsData, resData]) => {
   allWords = wordsData;
-  // resData は配列なので、キー付きオブジェクトに変換
   resData.forEach(record => {
     const key = record.number.join('-');
     resultsData[key] = record;
@@ -37,7 +36,7 @@ Promise.all([
   displayWord();
 });
 
-// 重み付きランダム選出：各単語の重み = (100 - accuracy) + 1
+// 重み付きランダム選出：各単語の重み = (100 - accuracy) + 1 (未記録なら accuracy = 0)
 function chooseWeightedIndex() {
   let totalWeight = 0;
   let weights = [];
@@ -70,21 +69,30 @@ function chooseNextWord() {
 function displayWord() {
   if (activeWords.length < 1) {
     document.getElementById('card-container').classList.add('hidden');
-    document.getElementById('reset-container').classList.remove('hidden');
+    document.getElementById('reset-container').classList.add('visible');
     return;
   }
   const currentWord = activeWords[currentIndex];
   document.getElementById('card-word').textContent = currentWord.word;
   document.getElementById('word-number').textContent = `#${keyForWord(currentWord)}`;
-  document.getElementById('overlay').classList.add('hidden');
+  document.getElementById('overlay').classList.remove('visible');
 }
 
+// サウンドフィードバック用関数
+function playFeedbackSound(type) {
+  const soundUrl = `sounds/${type}.mp3`;
+  const audio = new Audio(soundUrl);
+  audio.play().catch(err => console.error(err));
+}
+
+// 自動読み上げ関数
 function speakText(text) {
   const utterance = new SpeechSynthesisUtterance(text);
   utterance.lang = 'zh-TW';
   speechSynthesis.speak(utterance);
 }
 
+// mp3 再生（失敗時フォールバック）
 function playAudioWithFallback(url, fallbackFn) {
   const audio = new Audio(url);
   audio.onerror = fallbackFn;
@@ -92,10 +100,10 @@ function playAudioWithFallback(url, fallbackFn) {
   audio.load();
 }
 
-// カードコンテナクリック：オーバーレイ表示、詳細セット、単語音声再生（mp3 優先）
+// カードクリック：オーバーレイ表示、詳細セット、単語音声再生（mp3 優先）
 document.getElementById('card-container').addEventListener('click', function(e) {
   const overlay = document.getElementById('overlay');
-  if (overlay.classList.contains('hidden')) {
+  if (!overlay.classList.contains('visible')) {
     const currentWord = activeWords[currentIndex];
     document.getElementById('pinyin').textContent = currentWord.pinyin;
     document.getElementById('meaning').textContent = currentWord.meaning;
@@ -103,7 +111,7 @@ document.getElementById('card-container').addEventListener('click', function(e) 
     document.getElementById('example').innerHTML = `<strong>例文:</strong> ${ex.text}<br>
 <strong>拼音:</strong> ${ex.pinyin}<br>
 <strong>訳:</strong> ${ex.translation}`;
-    overlay.classList.remove('hidden');
+    overlay.classList.add('visible');
     const wordAudioUrl = `mp3/${keyForWord(currentWord)}_word.mp3`;
     playAudioWithFallback(wordAudioUrl, () => speakText(currentWord.word));
   }
@@ -125,7 +133,7 @@ document.getElementById('phraseReplayBtn').addEventListener('click', function(e)
   playAudioWithFallback(phraseAudioUrl, () => speakText(currentWord.example.text));
 });
 
-// 仮の回答送信処理
+// 仮の回答送信処理（POST /results に送信）
 function recordAnswer(result) {
   const currentWord = activeWords[currentIndex];
   fetch('/results', {
@@ -138,8 +146,10 @@ function recordAnswer(result) {
     });
 }
 
+// ◎ボタン（superCorrect）クリック
 document.getElementById('superCorrectBtn').addEventListener('click', function(e) {
   e.stopPropagation();
+  playFeedbackSound('superCorrect');
   recordAnswer("superCorrect");
   activeWords.splice(currentIndex, 1);
   if (activeWords.length < 1) {
@@ -150,20 +160,25 @@ document.getElementById('superCorrectBtn').addEventListener('click', function(e)
   }
 });
 
+// ◯ボタン（correct）クリック
 document.getElementById('correctBtn').addEventListener('click', function(e) {
   e.stopPropagation();
+  playFeedbackSound('correct');
   recordAnswer("correct");
   chooseNextWord();
   displayWord();
 });
 
+// ✗ボタン（incorrect）クリック
 document.getElementById('incorrectBtn').addEventListener('click', function(e) {
   e.stopPropagation();
+  playFeedbackSound('incorrect');
   recordAnswer("incorrect");
   chooseNextWord();
   displayWord();
 });
 
+// リセットボタン
 document.getElementById('resetBtn').addEventListener('click', function(e) {
   fetch('/resetResults', {
     method: 'POST',
@@ -173,7 +188,7 @@ document.getElementById('resetBtn').addEventListener('click', function(e) {
       if (data.success) {
         activeWords = allWords.slice();
         chooseNextWord();
-        document.getElementById('reset-container').classList.add('hidden');
+        document.getElementById('reset-container').classList.remove('visible');
         document.getElementById('card-container').classList.remove('hidden');
         displayWord();
       }
