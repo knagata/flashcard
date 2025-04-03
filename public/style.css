@@ -109,8 +109,6 @@ body {
 
 /* ボタン共通（固定幅を指定） */
 button {
-    width: 10vw;
-    height: 8vw;
     font-size: 3vw;
     padding: 1.5vw 2vw;
     cursor: pointer;
@@ -118,9 +116,11 @@ button {
 }
 
 /* リセットボタンのみ固定幅を解除 */
-#resetBtn {
-    width: auto;
-    height: auto;
+#superCorrectBtn,
+#correctBtn,
+#incorrectBtn {
+    width: 10vw;
+    height: 8vw;
 }
 
 /* リセットコンテナ：全画面中央表示、初期は非表示 */
@@ -147,6 +147,29 @@ button {
     font-size: 6vw;
     margin-bottom: 2vw;
 }
+
+/* 継続プロンプト用コンテナ */
+#continue-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: #f0f0f0;
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+    z-index: 10;
+  }
+  #continue-container.visible {
+    display: flex;
+  }
+  .continue-message {
+    font-size: 6vw;
+    margin-bottom: 2vw;
+  }
 
 /* スマートフォン向け調整 */
 @media (max-width: 768px) {
@@ -181,18 +204,19 @@ button {
     }
 
     button {
-        width: 20vw;
-        /* スマホ版は大きめの固定幅 */
-        height: 16vw;
         font-size: 6vw;
         padding: 2vw 4vw;
     }
-    #resetBtn {
-        width: auto;
-        height: auto;
+    
+    #superCorrectBtn,
+    #correctBtn,
+    #incorrectBtn {
+        width: 20vw;
+        height: 16vw;
     }
 
-    .reset-message {
+    .reset-message,
+    .continue-message {
         font-size: 8vw;
     }
 }

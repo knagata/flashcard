@@ -1,10 +1,14 @@
-// words.json は public フォルダ内に静的に配置されている前提
+// --- グローバル変数 ---
+// words.json は静的ファイルとして public に配置
 let allWords = [];
 let activeWords = [];
 let currentIndex = 0;
-let resultsData = {};
+let resultsData = {}; // DBから取得した結果データ（キーは "number" をハイフンで結合した文字列）
+let todaySuperCorrectCount = 0; // 今日の日付の SuperCorrect タップ回数
+let promptThreshold = 0; // 直近のプロンプト閾値（初期は 0、100,200,300,...）
 
-// 複合キーとしての単語番号をハイフン区切り文字列に変換する関数
+// --- 複合キー作成関数 ---
+// word.number は配列である前提。そうでなければエラーをスロー
 function keyForWord(word) {
   if (!Array.isArray(word.number)) {
     console.error("デバッグ: word.number が配列ではありません。word:", word);
@@ -13,22 +17,59 @@ function keyForWord(word) {
   return word.number.join('-');
 }
 
-// words.json と /results を読み込み、activeWords をセットアップ
+// --- 今日の日付かどうかをチェックする関数 ---
+// 引数の日時（ISO文字列）の日付部分が今日かどうかを判定
+function isToday(dateString) {
+  const d = new Date(dateString);
+  const today = new Date();
+  return d.getFullYear() === today.getFullYear() &&
+         d.getMonth() === today.getMonth() &&
+         d.getDate() === today.getDate();
+}
+
+// --- 今日の SuperCorrect タップ数を更新する関数 ---
+// resultsData から各レコードの last_super_correct を確認し、今日の日付のものをカウント
+function updateTodaySuperCorrectCount() {
+  todaySuperCorrectCount = 0;
+  Object.values(resultsData).forEach(record => {
+    if (record.last_super_correct && isToday(record.last_super_correct)) {
+      todaySuperCorrectCount++;
+    }
+  });
+  console.log("今日の SuperCorrect タップ数:", todaySuperCorrectCount);
+}
+
+// --- 継続プロンプト表示用関数 ---
+// 今日の日付における SuperCorrect タップ数が (promptThreshold + 100) に達した場合に表示
+function showContinuePrompt() {
+  const continueContainer = document.getElementById('continue-container');
+  const messageEl = document.querySelector('.continue-message');
+  messageEl.textContent = `${todaySuperCorrectCount}個の単語を覚えました。学習を継続しますか？`;
+  // フラッシュカードを隠して、継続プロンプトを表示
+  document.getElementById('card-container').classList.add('hidden');
+  continueContainer.classList.add('visible');
+}
+
+// --- 初期データ読み込み ---
+// words.json と /results エンドポイントからデータを取得し、activeWords を決定
 Promise.all([
   fetch('words.json').then(r => r.json()),
   fetch('/results').then(r => r.json())
 ]).then(([wordsData, resData]) => {
   allWords = wordsData;
+  // resData は配列なので、キー付きオブジェクトに変換（キーは number 配列をハイフン結合）
   resData.forEach(record => {
     const key = record.number.join('-');
     resultsData[key] = record;
   });
+  // 今日の SuperCorrect タップ数を更新
+  updateTodaySuperCorrectCount();
+  // activeWords は、last_super_correct が今日のものは除外
   const now = Date.now();
   activeWords = allWords.filter(word => {
     const rec = resultsData[keyForWord(word)];
-    if (rec && rec.last_super_correct) {
-      const last = new Date(rec.last_super_correct).getTime();
-      if (now - last < 24 * 3600 * 1000) return false;
+    if (rec && rec.last_super_correct && isToday(rec.last_super_correct)) {
+      return false;
     }
     return true;
   });
@@ -36,7 +77,8 @@ Promise.all([
   displayWord();
 });
 
-// 重み付きランダム選出：各単語の重み = (100 - accuracy) + 1 (未記録なら accuracy = 0)
+// --- 重み付きランダム選出 ---
+// 各単語の重み = (100 - accuracy) + 1。未記録なら accuracy = 0 とする。
 function chooseWeightedIndex() {
   let totalWeight = 0;
   let weights = [];
@@ -69,13 +111,28 @@ function chooseNextWord() {
 function displayWord() {
   if (activeWords.length < 1) {
     document.getElementById('card-container').classList.add('hidden');
-    document.getElementById('reset-container').classList.add('visible');
+    // リセットは別途実装（ここでは継続プロンプトとリセットは異なる）
     return;
   }
   const currentWord = activeWords[currentIndex];
   document.getElementById('card-word').textContent = currentWord.word;
   document.getElementById('word-number').textContent = `#${keyForWord(currentWord)}`;
+  // オーバーレイは初期非表示（CSS管理）
   document.getElementById('overlay').classList.remove('visible');
+}
+
+// --- 音声・サウンド再生関連 ---
+function speakText(text) {
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.lang = 'zh-TW';
+  speechSynthesis.speak(utterance);
+}
+
+function playAudioWithFallback(url, fallbackFn) {
+  const audio = new Audio(url);
+  audio.onerror = fallbackFn;
+  audio.oncanplaythrough = () => audio.play();
+  audio.load();
 }
 
 // サウンドフィードバック用関数
@@ -85,22 +142,8 @@ function playFeedbackSound(type) {
   audio.play().catch(err => console.error(err));
 }
 
-// 自動読み上げ関数
-function speakText(text) {
-  const utterance = new SpeechSynthesisUtterance(text);
-  utterance.lang = 'zh-TW';
-  speechSynthesis.speak(utterance);
-}
-
-// mp3 再生（失敗時フォールバック）
-function playAudioWithFallback(url, fallbackFn) {
-  const audio = new Audio(url);
-  audio.onerror = fallbackFn;
-  audio.oncanplaythrough = () => audio.play();
-  audio.load();
-}
-
-// カードクリック：オーバーレイ表示、詳細セット、単語音声再生（mp3 優先）
+// --- イベントリスナー ---
+// カードコンテナクリック：オーバーレイ表示、詳細セット、単語音声再生（mp3優先）
 document.getElementById('card-container').addEventListener('click', function(e) {
   const overlay = document.getElementById('overlay');
   if (!overlay.classList.contains('visible')) {
@@ -133,7 +176,8 @@ document.getElementById('phraseReplayBtn').addEventListener('click', function(e)
   playAudioWithFallback(phraseAudioUrl, () => speakText(currentWord.example.text));
 });
 
-// 仮の回答送信処理（POST /results に送信）
+// --- 回答送信処理 ---
+// POST /results に { number, result } を送信する
 function recordAnswer(result) {
   const currentWord = activeWords[currentIndex];
   fetch('/results', {
@@ -143,14 +187,31 @@ function recordAnswer(result) {
   }).then(response => response.json())
     .then(data => {
       console.log(`Word: ${keyForWord(currentWord)}, Result: ${result}, Accuracy: ${data.accuracy}`);
+      // 結果が更新されたと仮定し、localの resultsData を更新（最簡易な対応）
+      if (!resultsData[keyForWord(currentWord)]) {
+        resultsData[keyForWord(currentWord)] = { history: [] };
+      }
+      if (result === "superCorrect") {
+        resultsData[keyForWord(currentWord)].last_super_correct = new Date().toISOString();
+      }
+      // 必要なら history の更新処理も追加
+      // 更新後、今日のSuperCorrectカウントを再計算
+      updateTodaySuperCorrectCount();
+      // 継続プロンプトの閾値をチェック
+      if (todaySuperCorrectCount >= promptThreshold + 100) {
+        promptThreshold = Math.floor(todaySuperCorrectCount / 100) * 100;
+        showContinuePrompt();
+        return; // プロンプト表示中はここで処理終了
+      }
     });
 }
 
-// ◎ボタン（superCorrect）クリック
+// ◎ボタン（superCorrect）クリック処理
 document.getElementById('superCorrectBtn').addEventListener('click', function(e) {
   e.stopPropagation();
   playFeedbackSound('superCorrect');
   recordAnswer("superCorrect");
+  // カードを除外
   activeWords.splice(currentIndex, 1);
   if (activeWords.length < 1) {
     displayWord();
@@ -160,7 +221,7 @@ document.getElementById('superCorrectBtn').addEventListener('click', function(e)
   }
 });
 
-// ◯ボタン（correct）クリック
+// ◯ボタン（correct）クリック処理
 document.getElementById('correctBtn').addEventListener('click', function(e) {
   e.stopPropagation();
   playFeedbackSound('correct');
@@ -169,7 +230,7 @@ document.getElementById('correctBtn').addEventListener('click', function(e) {
   displayWord();
 });
 
-// ✗ボタン（incorrect）クリック
+// ✗ボタン（incorrect）クリック処理
 document.getElementById('incorrectBtn').addEventListener('click', function(e) {
   e.stopPropagation();
   playFeedbackSound('incorrect');
@@ -178,7 +239,18 @@ document.getElementById('incorrectBtn').addEventListener('click', function(e) {
   displayWord();
 });
 
-// リセットボタン
+// --- 継続プロンプト用イベント ---
+// 「継続する」ボタンをクリックした際の処理
+document.getElementById('continueBtn').addEventListener('click', function(e) {
+  e.stopPropagation();
+  // 継続プロンプトを非表示にして、カードエリアを再表示
+  document.getElementById('continue-container').classList.remove('visible');
+  document.getElementById('card-container').classList.remove('hidden');
+  displayWord();
+});
+
+// --- リセット処理 ---
+// リセットボタンをクリックした際、/resetResults にリクエストし全単語を再表示
 document.getElementById('resetBtn').addEventListener('click', function(e) {
   fetch('/resetResults', {
     method: 'POST',
