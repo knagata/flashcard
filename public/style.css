@@ -106,6 +106,7 @@ html, body {
   /* ボタン共通（固定幅を指定） */
   button {
     width: 10vw; /* PC版の固定幅 */
+    height: 8vw;
     font-size: 3vw;
     padding: 1.5vw 2vw;
     cursor: pointer;
@@ -138,7 +139,7 @@ html, body {
   }
   
   /* スマートフォン向け調整 */
-  @media (max-width: 600px) {
+  @media (max-width: 800px) {
     #card-container {
       width: 100vw;
       height: 100vh;
@@ -164,6 +165,7 @@ html, body {
     }
     button {
       width: 20vw;  /* スマホ版は大きめの固定幅 */
+      height: 16vw;
       font-size: 6vw;
       padding: 2vw 4vw;
     }
