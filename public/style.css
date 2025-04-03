@@ -139,7 +139,7 @@ html, body {
   }
   
   /* スマートフォン向け調整 */
-  @media (max-width: 800px) {
+  @media (max-width: 1000px) {
     #card-container {
       width: 100vw;
       height: 100vh;
