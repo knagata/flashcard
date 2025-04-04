@@ -73,8 +73,14 @@ Promise.all([
     }
     return true;
   });
-  chooseNextWord();
-  displayWord();
+  // 初期化時に activeWords が空ならリセット画面を表示
+  if (activeWords.length < 1) {
+    document.getElementById('card-container').classList.add('hidden');
+    document.getElementById('reset-container').classList.add('visible');
+  } else {
+    chooseNextWord();
+    displayWord();
+  }
 });
 
 // --- 重み付きランダム選出 ---
