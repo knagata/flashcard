@@ -6,6 +6,7 @@ let currentIndex = 0;
 let resultsData = {}; // DBから取得した結果データ（キーは "number" をハイフンで結合した文字列）
 let todaySuperCorrectCount = 0; // 今日の日付の SuperCorrect タップ回数
 let promptThreshold = 0; // 直近のプロンプト閾値（初期は 0、100,200,300,...）
+let isPromptActive = false; // 継続プロンプトが表示中かどうか
 
 // --- 複合キー作成関数 ---
 // word.number は配列である前提。そうでなければエラーをスロー
@@ -42,6 +43,10 @@ function updateTodaySuperCorrectCount() {
 // --- 継続プロンプト表示用関数 ---
 // 今日の日付における SuperCorrect タップ数が (promptThreshold + 100) に達した場合に表示
 function showContinuePrompt() {
+  // すでにプロンプトが表示中なら処理しない
+  if(isPromptActive) return;
+  isPromptActive = true; // プロンプト表示中に設定
+
   const continueContainer = document.getElementById('continue-container');
   const messageEl = document.querySelector('.continue-message');
   messageEl.textContent = `${todaySuperCorrectCount}個の単語を覚えました。学習を継続しますか？`;
@@ -151,6 +156,7 @@ function playFeedbackSound(type) {
 // --- イベントリスナー ---
 // カードコンテナクリック：オーバーレイ表示、詳細セット、単語音声再生（mp3優先）
 document.getElementById('card-container').addEventListener('click', function(e) {
+  if (isPromptActive) return; // プロンプト表示中なら無視
   const overlay = document.getElementById('overlay');
   if (!overlay.classList.contains('visible')) {
     const currentWord = activeWords[currentIndex];
@@ -214,7 +220,8 @@ function recordAnswer(result) {
 
 // ◎ボタン（superCorrect）クリック処理
 document.getElementById('superCorrectBtn').addEventListener('click', function(e) {
-  e.stopPropagation();
+    if (isPromptActive) return; // プロンプト表示中なら無視
+    e.stopPropagation();
   playFeedbackSound('superCorrect');
   recordAnswer("superCorrect");
   // カードを除外
@@ -230,7 +237,8 @@ document.getElementById('superCorrectBtn').addEventListener('click', function(e)
 
 // ◯ボタン（correct）クリック処理
 document.getElementById('correctBtn').addEventListener('click', function(e) {
-  e.stopPropagation();
+    if (isPromptActive) return; // プロンプト表示中なら無視
+    e.stopPropagation();
   playFeedbackSound('correct');
   recordAnswer("correct");
   chooseNextWord();
@@ -239,7 +247,8 @@ document.getElementById('correctBtn').addEventListener('click', function(e) {
 
 // ✗ボタン（incorrect）クリック処理
 document.getElementById('incorrectBtn').addEventListener('click', function(e) {
-  e.stopPropagation();
+    if (isPromptActive) return; // プロンプト表示中なら無視
+    e.stopPropagation();
   playFeedbackSound('incorrect');
   recordAnswer("incorrect");
   chooseNextWord();
@@ -253,6 +262,7 @@ document.getElementById('continueBtn').addEventListener('click', function(e) {
   // 継続プロンプトを非表示にして、カードエリアを再表示
   document.getElementById('continue-container').classList.remove('visible');
   document.getElementById('card-container').classList.remove('hidden');
+  isPromptActive = false; // 状態フラグをリセット
   displayWord();
 });
 
