@@ -259,17 +259,11 @@ document.getElementById('continueBtn').addEventListener('click', function(e) {
 // --- リセット処理 ---
 // リセットボタンをクリックした際、/resetResults にリクエストし全単語を再表示
 document.getElementById('resetBtn').addEventListener('click', function(e) {
-  fetch('/resetResults', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' }
-  }).then(response => response.json())
-    .then(data => {
-      if (data.success) {
-        activeWords = allWords.slice();
-        chooseNextWord();
-        document.getElementById('reset-container').classList.remove('visible');
-        document.getElementById('card-container').classList.remove('hidden');
-        displayWord();
-      }
-    });
+  // サーバー側のデータはそのまま（ページ再読み込み時には再フィルタされる）
+  activeWords = allWords.slice();
+  chooseNextWord();
+  // リセット時はリセットコンテナを非表示、カードコンテナを表示
+  document.getElementById('reset-container').classList.remove('visible');
+  document.getElementById('card-container').classList.remove('hidden');
+  displayWord();
 });
