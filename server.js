@@ -52,13 +52,13 @@ app.post('/results', async (req, res) => {
   }
   
   let history = [];
-  let last_super_correct = null;
+  let newLastSuperCorrect = null;
   if (existing) {
     history = existing.history || [];
   }
   if (result === "superCorrect") {
     history.push(1);
-    last_super_correct = new Date().toISOString();
+    newLastSuperCorrect = new Date().toISOString();
   } else if (result === "correct") {
     history.push(1);
   } else {
@@ -70,32 +70,30 @@ app.post('/results', async (req, res) => {
   const total = history.length;
   const sum = history.reduce((a, b) => a + b, 0);
   const accuracy = Math.round((sum / total) * 100);
+
+  let updateData = { history };
+  if (result === "superCorrect") {
+    updateData.last_super_correct = newLastSuperCorrect;
+  }
   
   if (existing) {
     const { error: updateError } = await supabase
       .from('results')
-      .update({ history, last_super_correct })
-      .eq('number', pgArray(number))
+      .update(updateData)  // updateDataには "correct"／"incorrect" の場合、last_super_correct は含まれない
+      .eq('number', pgArray(number));
     if (updateError) return res.status(500).json({ error: updateError.message });
   } else {
+    // 新規挿入時も、resultが"superCorrect"の場合のみlast_super_correctを設定
+    const insertData = { number, history };
+    if (result === "superCorrect") {
+      insertData.last_super_correct = newLastSuperCorrect;
+    }
     const { error: insertError } = await supabase
       .from('results')
-      .insert([{ number, history, last_super_correct }]);
+      .insert([insertData]);
     if (insertError) return res.status(500).json({ error: insertError.message });
   }
   res.json({ success: true, accuracy });
-});
-
-/**
- * POST /resetResults
- * 全レコードの last_super_correct を NULL に更新する
- */
-app.post('/resetResults', async (req, res) => {
-  const { error } = await supabase
-    .from('results')
-    .update({ last_super_correct: null });
-  if (error) return res.status(500).json({ error: error.message });
-  res.json({ success: true });
 });
 
 app.listen(port, () => {
