@@ -214,7 +214,8 @@ document.getElementById('superCorrectBtn').addEventListener('click', function(e)
   // カードを除外
   activeWords.splice(currentIndex, 1);
   if (activeWords.length < 1) {
-    displayWord();
+    document.getElementById('card-container').classList.add('hidden');
+    document.getElementById('reset-container').classList.add('visible');
   } else {
     chooseNextWord();
     displayWord();
