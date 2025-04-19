@@ -70,6 +70,7 @@ Promise.all([
         chooseNextWord();
         displayWord();
     }
+    console.log(`単語数: ${allWords.length}, アクティブ単語数: ${activeWords.length}`);
 });
 
 // --- 今日の SuperCorrect タップ数を更新する関数 ---
