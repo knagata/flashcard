@@ -312,7 +312,7 @@ document.addEventListener("keydown", function(e) {
             recordAnswer("incorrect");
             chooseNextWord();
             displayWord();
-        }else if(e.key == ''){
+        }else if(e.key == ' '){
             const currentWord = activeWords[currentIndex];
             const wordAudioUrl = `mp3/${keyForWord(currentWord)}_word.mp3`;
             playAudioWithFallback(wordAudioUrl, () => speakText(currentWord.word));
