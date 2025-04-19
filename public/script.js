@@ -315,7 +315,7 @@ document.addEventListener("keydown", function(e) {
             playFeedbackSound('incorrect');
             recordAnswer("incorrect");
             chooseNextWord();
-    d       isplayWord();
+            displayWord();
         }
     }else{
         if(e.key == 'z'){
