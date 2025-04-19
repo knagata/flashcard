@@ -289,11 +289,7 @@ function playFeedbackSound(type) {
 //////////////
 document.addEventListener("keydown", function(e) {
     const overlay = document.getElementById('overlay');
-    if (e.key === " ") {
-        const currentWord = activeWords[currentIndex];
-        const wordAudioUrl = `mp3/${keyForWord(currentWord)}_word.mp3`;
-        playAudioWithFallback(wordAudioUrl, () => speakText(currentWord.word));
-    }else if (overlay.classList.contains('visible')) {
+    if (overlay.classList.contains('visible')) {
         if(e.key == 'z'){
             playFeedbackSound('superCorrect');
             recordAnswer("superCorrect");
@@ -316,9 +312,13 @@ document.addEventListener("keydown", function(e) {
             recordAnswer("incorrect");
             chooseNextWord();
             displayWord();
+        }else if(e.key == ''){
+            const currentWord = activeWords[currentIndex];
+            const wordAudioUrl = `mp3/${keyForWord(currentWord)}_word.mp3`;
+            playAudioWithFallback(wordAudioUrl, () => speakText(currentWord.word));
         }
     }else{
-        if(e.key == 'z'){
+        if(e.key == ' '){
             const currentWord = activeWords[currentIndex];
             document.getElementById('pinyin').textContent = currentWord.pinyin;
             document.getElementById('meaning').textContent = currentWord.meaning;
