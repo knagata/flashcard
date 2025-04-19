@@ -283,3 +283,52 @@ function playFeedbackSound(type) {
     const audio = new Audio(soundUrl);
     audio.play().catch(err => console.error(err));
 }
+
+//////////////
+// KEYBOARD //
+//////////////
+document.addEventListener("keydown", function(e) {
+    const overlay = document.getElementById('overlay');
+    if (e.key === " ") {
+        const currentWord = activeWords[currentIndex];
+        const wordAudioUrl = `mp3/${keyForWord(currentWord)}_word.mp3`;
+        playAudioWithFallback(wordAudioUrl, () => speakText(currentWord.word));
+    }else if (overlay.classList.contains('visible')) {
+        if(e.key == 'z'){
+            playFeedbackSound('superCorrect');
+            recordAnswer("superCorrect");
+            // カードを除外
+            activeWords.splice(currentIndex, 1);
+            if (activeWords.length < 1) {
+                document.getElementById('card-container').classList.add('hidden');
+                document.getElementById('reset-container').classList.add('visible');
+            } else {
+                chooseNextWord();
+                displayWord();
+            }
+        }else if(e.key == 'x'){
+            playFeedbackSound('correct');
+            recordAnswer("correct");
+            chooseNextWord();
+            displayWord();
+        }else if(e.key == 'c'){
+            playFeedbackSound('incorrect');
+            recordAnswer("incorrect");
+            chooseNextWord();
+    d       isplayWord();
+        }
+    }else{
+        if(e.key == 'z'){
+            const currentWord = activeWords[currentIndex];
+            document.getElementById('pinyin').textContent = currentWord.pinyin;
+            document.getElementById('meaning').textContent = currentWord.meaning;
+            const ex = currentWord.example;
+            document.getElementById('example').innerHTML = `<strong>例文:</strong> ${ex.text}<br>
+<strong>拼音:</strong> ${ex.pinyin}<br>
+<strong>訳:</strong> ${ex.translation}`;
+            overlay.classList.add('visible');
+            const wordAudioUrl = `mp3/${keyForWord(currentWord)}_word.mp3`;
+            playAudioWithFallback(wordAudioUrl, () => speakText(currentWord.word));
+        }
+    }
+});
