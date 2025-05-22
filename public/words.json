@@ -6019,11 +6019,11 @@
   {
     "number": [0, 548],
     "word": "日期",
-    "pinyin": "rì qī",
+    "pinyin": "rì qí",
     "meaning": "日付、期日",
     "example": {
       "text": "這個日期是正確的嗎？",
-      "pinyin": "zhè gè rì qī shì zhèng què de ma?",
+      "pinyin": "zhè gè rì qí shì zhèng què de ma?",
       "translation": "この日付は正しいですか?"
     }
   },
@@ -6173,7 +6173,7 @@
   {
     "number": [0, 562],
     "word": "一會",
-    "pinyin": "yí huì",
+    "pinyin": "yì huǐ",
     "meaning": "すぐ、ほんのしばらく",
     "example": {
       "text": "俊傑一會就來。",
@@ -6647,7 +6647,7 @@
     "number": [0, 605],
     "word": "咳嗽",
     "pinyin": "ké sòu",
-    "meaning": "咳",
+    "meaning": "咳をする",
     "example": {
       "text": "他咳嗽了好幾天。",
       "pinyin": "tā késòu le hǎo jǐ tiān.",
@@ -6658,7 +6658,7 @@
     "number": [0, 606],
     "word": "發燒",
     "pinyin": "fā shāo",
-    "meaning": "熱",
+    "meaning": "熱がでる、熱がある",
     "example": {
       "text": "我發燒了。",
       "pinyin": "wǒ fā shāo le.",
@@ -6669,7 +6669,7 @@
     "number": [0, 607],
     "word": "疼",
     "pinyin": "téng",
-    "meaning": "痛み",
+    "meaning": "痛い",
     "example": {
       "text": "春嬌常常頭疼。",
       "pinyin": "Chūnjiāo cháng cháng tóu téng.",
@@ -6680,7 +6680,7 @@
     "number": [0, 608],
     "word": "病人",
     "pinyin": "bìng rén",
-    "meaning": "忍耐強い",
+    "meaning": "病人",
     "example": {
       "text": "美玲要照顧病人。",
       "pinyin": "Měilíng yào zhào gù bìngrén.",
@@ -6702,7 +6702,7 @@
     "number": [0, 610],
     "word": "救命",
     "pinyin": "jiù mìng",
-    "meaning": "ヘルプ",
+    "meaning": "命を救う",
     "example": {
       "text": "救命！",
       "pinyin": "jiù mìng!",
@@ -6713,7 +6713,7 @@
     "number": [0, 611],
     "word": "掛號",
     "pinyin": "guà hào",
-    "meaning": "登録済み",
+    "meaning": "受付をする",
     "example": {
       "text": "八點開始掛號。",
       "pinyin": "bā diǎn kāi shǐ guà hào.",
@@ -6954,11 +6954,11 @@
   {
     "number": [0, 633],
     "word": "危險",
-    "pinyin": "wēi xiǎn",
+    "pinyin": "wéi xiǎn",
     "meaning": "危険、危険である",
     "example": {
       "text": "牌子上寫著，危險，禁止游泳。",
-      "pinyin": "pái zi shàng xiě zhe, wēi xiǎn, jìn zhǐ yóu yǒng.",
+      "pinyin": "pái zi shàng xiě zhe, wéi xiǎn, jìn zhǐ yóu yǒng.",
       "translation": "標識には「危険、遊泳禁止」と書いてありました。"
     }
   },
@@ -7064,11 +7064,11 @@
   {
     "number": [0, 643],
     "word": "清楚",
-    "pinyin": "qīng chu",
+    "pinyin": "qīng chǔ",
     "meaning": "はっきりしている、明瞭である",
     "example": {
       "text": "你很清楚這是怎麼一回事。",
-      "pinyin": "nǐ hěn qīng chu zhè shì zěn me yī huí shì.",
+      "pinyin": "nǐ hěn qīng chǔ zhè shì zěn me yī huí shì.",
       "translation": "あなたはこれが何であるかを正確に知っています。"
     }
   },
@@ -8571,7 +8571,7 @@
   {
     "number": [0, 780],
     "word": "消息",
-    "pinyin": "xiāo xi",
+    "pinyin": "xiāo xí",
     "meaning": "情報、ニュース、消息",
     "example": {
       "text": " ",
@@ -10870,7 +10870,7 @@
   {
     "number": [0, 989],
     "word": "不但",
-    "pinyin": "bù dàn",
+    "pinyin": "bú dàn",
     "meaning": "〜だけでなく",
     "example": {
       "text": " ",
